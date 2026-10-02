@@ -5,6 +5,7 @@ mod jobs;
 mod browser;
 mod history;
 mod preview;
+mod updates;
 use tauri::Manager;
 
 #[tauri::command]
@@ -13,10 +14,6 @@ async fn choose_folder()->Result<Option<String>,String>{
 }
 #[tauri::command]
 fn downloads_folder(app:tauri::AppHandle)->Result<String,String>{app.path().download_dir().map(|p|p.to_string_lossy().into_owned()).map_err(|e|e.to_string())}
-#[tauri::command]
-fn open_updates()->Result<(),String>{
-    std::process::Command::new("explorer.exe").arg("https://github.com/teiqo/cutload/releases").spawn().map(|_|()).map_err(|e|e.to_string())
-}
 fn main(){
     let arguments:Vec<String>=std::env::args().collect();
     let browser_mode=cfg!(debug_assertions)&&arguments.get(1).map(String::as_str)==Some("--browser-backend");
@@ -76,6 +73,6 @@ fn main(){
                 if active {api.prevent_close();let window=window.clone();tauri::async_runtime::spawn(async move {for _ in 0..50 {if jobs.0.lock().map(|r|r.is_empty()).unwrap_or(true){break}tokio::time::sleep(std::time::Duration::from_millis(100)).await;}let _=window.destroy();});}
             }
         })
-        .invoke_handler(tauri::generate_handler![media::analyze_media,media::cancel_analysis,jobs::start_download,jobs::save_cover,jobs::cancel_download,choose_folder,downloads_folder,open_updates,history::recent_downloads,history::download_thumbnail,history::open_download,preview::preview_video,preview::preview_frame,preview::project_folder])
+        .invoke_handler(tauri::generate_handler![media::analyze_media,media::cancel_analysis,jobs::start_download,jobs::save_cover,jobs::cancel_download,choose_folder,downloads_folder,updates::install_update,history::recent_downloads,history::download_thumbnail,history::open_download,preview::preview_video,preview::preview_frame,preview::project_folder])
         .run(context).expect("Не удалось запустить cutload");
 }
