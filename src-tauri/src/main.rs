@@ -23,6 +23,14 @@ fn main(){
     if smoke||browser_mode {context.config_mut().app.windows.iter_mut().for_each(|window|window.visible=false);}
     tauri::Builder::default().manage(jobs::Jobs::default())
         .setup(move |app|{
+            if !smoke&&!browser_mode {
+                if let Some(window)=app.get_webview_window("main") {
+                    tauri::async_runtime::spawn(async move {
+                        tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+                        if !window.is_visible().unwrap_or(true){let _=window.show();}
+                    });
+                }
+            }
             #[cfg(windows)]
             if let Some(window)=app.get_webview_window("main") {
                 window.with_webview(|webview|unsafe {

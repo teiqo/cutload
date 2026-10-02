@@ -1,4 +1,5 @@
 import {setupBackgroundFlow} from './background-flow';
+import {finishStartup} from './startup';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import {setupSettings} from './settings';
 import { backend, desktop, backendEnabled } from './bridge';
@@ -255,3 +256,4 @@ if(backendEnabled){
 }
 setupSettings();
 setupBackgroundFlow();
+void finishStartup();
