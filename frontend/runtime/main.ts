@@ -1,4 +1,5 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import {setupSettings} from './settings';
 import { backend, desktop, backendEnabled } from './bridge';
 import type { MediaInfo, Progress } from './types';
 import './desktop.css';
@@ -251,3 +252,4 @@ if(backendEnabled){
 }else{
   document.querySelector<HTMLElement>('.demo-caption')!.textContent='предпросмотр интерфейса · скачивание доступно в приложении';
 }
+setupSettings();

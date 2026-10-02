@@ -1,6 +1,22 @@
 {
-  "name":"cutload","version":"0.1.0","private":true,"type":"module",
-  "scripts":{"dev":"vite --host 127.0.0.1 --port 5174 --strictPort","browser":"node scripts/browser-dev.mjs","build":"tsc --noEmit && vite build","tauri":"tauri","desktop":"tauri dev","package":"tauri build"},
-  "devDependencies":{"@tauri-apps/cli":"^2","typescript":"^5","vite":"^7"},
-  "dependencies":{"@tauri-apps/api":"^2"}
+  "name": "cutload",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174 --strictPort",
+    "browser": "node scripts/browser-dev.mjs",
+    "build": "tsc --noEmit && vite build",
+    "tauri": "tauri",
+    "desktop": "tauri dev",
+    "package": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "typescript": "^5",
+    "vite": "^7"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2"
+  }
 }
