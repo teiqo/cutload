@@ -80,8 +80,7 @@
   function randomSpin(t,dt){if(t>=nextAutoTurn){const v=[Math.random()*2-1,Math.random()*2-1,Math.random()*2-1],n=Math.hypot(...v)||1;autoTarget=v.map(x=>x/n);nextAutoTurn=t+7000+Math.random()*7000}const blend=1-Math.exp(-dt*.35);autoAxis=autoAxis.map((v,i)=>v+(autoTarget[i]-v)*blend);return autoAxis}
   function modeLabel(){const label=lang==='ru'?(mode?'вернуться к загрузке':'вращать звезду'):(mode?'return to download':'rotate star');button.setAttribute('aria-label',label);button.title=label}
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');modeLabel();button.setAttribute('aria-pressed','false');document.getElementById('langBtn').addEventListener('click',modeLabel);
-  let orbitCenter=null;
-  function setMode(on){if(mode===on)return;orbitCenter=on&&starCenter?starCenter.slice():null;mode=on;document.body.classList.toggle('orbit-mode',on);document.querySelector('.workspace').inert=on;button.classList.toggle('active',on);button.setAttribute('aria-pressed',on);modeLabel();if(pointer!==null&&canvas.hasPointerCapture(pointer))canvas.releasePointerCapture(pointer);dragging=false;pointer=null;previousTrackball=null;canvas.classList.remove('dragging');if(!on)zoom=1}
+  function setMode(on){if(mode===on)return;mode=on;document.body.classList.toggle('orbit-mode',on);document.querySelector('.workspace').inert=on;button.classList.toggle('active',on);button.setAttribute('aria-pressed',on);modeLabel();if(pointer!==null&&canvas.hasPointerCapture(pointer))canvas.releasePointerCapture(pointer);dragging=false;pointer=null;previousTrackball=null;canvas.classList.remove('dragging');if(!on)zoom=1}
   button.onclick=()=>setMode(!mode);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mode)setMode(false)});
   function trackball(e){const r=canvas.getBoundingClientRect(),radius=Math.max(1,Math.min(r.width,r.height,innerWidth,innerHeight)*.36),x=(e.clientX-(r.left+r.width/2))/radius,y=((r.top+r.height/2)-e.clientY)/radius,d=Math.hypot(x,y),z=d<Math.SQRT1_2?Math.sqrt(1-d*d):.5/d,n=Math.hypot(x,y,z);return [x/n,y/n,z/n]}
   canvas.addEventListener('pointerdown',e=>{if(!mode||e.button!==0)return;dragging=true;pointer=e.pointerId;previousTrackball=trackball(e);previousClient=[e.clientX,e.clientY];lastPointerTime=e.timeStamp;angularVelocity=[0,0,0];canvas.setPointerCapture(pointer);canvas.classList.add('dragging');e.preventDefault()});
@@ -93,15 +92,16 @@
     const spinAxis=randomSpin(t,dt);const expanded=document.body.classList.contains('expanded');const working=document.querySelector('#linkForm').classList.contains('link-working');const spinBoost=document.body.classList.contains('download-working')?5:working?2.5:1;
     const canvasWidth=canvas.clientWidth;
     const anchor=expanded?null:document.querySelector('.workspace').getBoundingClientRect();
-    const targetCenter=mode&&orbitCenter?orbitCenter:[anchor?anchor.left+anchor.width/2:innerWidth/2,anchor?anchor.top+anchor.height/2:(innerHeight-document.querySelector('footer').offsetHeight)/2];
+    const targetCenter=mode?[innerWidth/2,(innerHeight-document.querySelector('footer').offsetHeight)/2]:[anchor?anchor.left+anchor.width/2:innerWidth/2,anchor?anchor.top+anchor.height/2:(innerHeight-document.querySelector('footer').offsetHeight)/2];
     if(!starCenter)starCenter=targetCenter.slice();
-    const follow=animate?1-Math.exp(-dt*10):1;
+    const resizing=document.body.classList.contains('viewport-resizing');
+    const follow=animate&&!(mode&&resizing)?1-Math.exp(-dt*10):1;
     starCenter=starCenter.map((v,i)=>Math.abs(targetCenter[i]-v)<.05?targetCenter[i]:v+(targetCenter[i]-v)*follow);
     const centerLeft=Math.round(starCenter[0]*4)/4+'px',centerTop=Math.round(starCenter[1]*4)/4+'px';
     if(canvas.parentElement.style.left!==centerLeft)canvas.parentElement.style.left=centerLeft;
     if(canvas.parentElement.style.top!==centerTop)canvas.parentElement.style.top=centerTop;
     if(!dragging&&animate){const speed=Math.hypot(...angularVelocity);if(speed>1e-4)orientation=qnorm(qmul(qaxis(angularVelocity,speed*dt),orientation));const friction=Math.exp(-dt*.9);angularVelocity=angularVelocity.map(v=>v*friction);orientation=qnorm(qmul(qaxis(spinAxis,dt*.20*spinBoost*Math.min(1,Math.hypot(...spinAxis))),orientation))}
-    {const size=Math.ceil(canvasWidth*(economical?Math.min(devicePixelRatio||1,1):Math.min(Math.max(devicePixelRatio||1,1.25),1.5))/64)*64;if(canvas.width!==size||canvas.height!==size){canvas.width=canvas.height=size;gl.viewport(0,0,size,size);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,size,size,0,gl.RGBA,gl.UNSIGNED_BYTE,null)}
+    {const size=Math.ceil(canvasWidth*(economical?Math.min(devicePixelRatio||1,1):Math.min(Math.max(devicePixelRatio||1,1.25),1.5))/64)*64;if(!resizing&&(canvas.width!==size||canvas.height!==size)){canvas.width=canvas.height=size;gl.viewport(0,0,size,size);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,size,size,0,gl.RGBA,gl.UNSIGNED_BYTE,null)}
       const [w,x,y,z]=orientation;const m=[1-2*(y*y+z*z),2*(x*y+w*z),2*(x*z-w*y),0,2*(x*y-w*z),1-2*(x*x+z*z),2*(y*z+w*x),0,2*(x*z+w*y),2*(y*z-w*x),1-2*(x*x+y*y),0,0,0,-6,1];
       const zoomTarget=mode?Math.min(zoom*1.08,Math.max(1.08,maxOrbitZoom())):zoom;displayZoom+=(zoomTarget-displayZoom)*(animate?1-Math.exp(-dt*8):1);
       const f=.95*displayZoom,near=.1,far=20,projection=[f,0,0,0,0,f,0,0,0,0,-2/(far-near),0,0,0,-(far+near)/(far-near),1];const match=(canvas.dataset.color||'#9988dd').match(/^#([\da-f]{6})$/i);const rgb=match?[0,2,4].map(i=>parseInt(match[1].slice(i,i+2),16)/255):[.5,.4,.9];

@@ -4,12 +4,14 @@ function rainbowPalette(time=performance.now()){
   const n=parseInt(prefs.color.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
   const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;
   const brightness=(max+min)/510,saturation=d===0?0:(d/255)/(1-Math.abs(2*brightness-1));
-  const hue=(d===0?260:max===r?60*((g-b)/d%6):max===g?60*((b-r)/d+2):60*((r-g)/d+4))+(time-rainbowEpoch)/220;
-  return {color:hslHex(hue,saturation,brightness),background:Array.from({length:6},(_,i)=>hslHex(hue+i*60,saturation*.8,brightness*.4))};
+  const hue=(d===0?260:max===r?60*((g-b)/d%6):max===g?60*((b-r)/d+2):60*((r-g)/d+4))+(time-rainbowEpoch)/45;
+  // Neutral default colors must still produce a visible rainbow.
+  const rainbowSaturation=d===0?.72:saturation;
+  const rainbowBrightness=brightness<.12||brightness>.85?.6:brightness;
+  return {color:hslHex(hue,rainbowSaturation,rainbowBrightness)};
 }
-paint=function(c){
-  const palette=rainbowPalette();c=palette?.color||c||prefs.color;
-  if(palette)palette.background.forEach((value,i)=>document.body.style.setProperty('--rb'+(i+1),value));
+paint=function(c,time){
+  const palette=rainbowPalette(time);c=palette?.color||c||prefs.color;
   originalPaint(c);const st=document.body.style,light=prefs.theme==='light',black=prefs.theme==='amoled';
   document.querySelectorAll('.accsw[data-c]').forEach(button=>button.classList.toggle('sel',!prefs.rainbow&&button.dataset.c===prefs.color));
   const picker=document.querySelector('#accCustom'),hex=document.querySelector('#accCustomHex');
@@ -117,7 +119,14 @@ linkInput.addEventListener('change',scheduleInputSize);
 clearButton.addEventListener('click',scheduleInputSize);
 document.fonts.ready.then(scheduleInputSize);
 new MutationObserver(scheduleInputSize).observe(linkInput,{attributes:true,attributeFilter:['placeholder']});
-window.addEventListener('resize',()=>{scheduleInputSize();requestAnimationFrame(positionWorkspace)});
+let viewportResizeTimer;
+window.addEventListener('resize',()=>{
+  document.body.classList.add('viewport-resizing');
+  clearTimeout(viewportResizeTimer);
+  // Recalculate against the new width before measuring the text field.
+  positionWorkspace();sizeLinkForm();positionIndicator();
+  viewportResizeTimer=setTimeout(()=>document.body.classList.remove('viewport-resizing'),180);
+});
 sizeLinkForm();positionWorkspace();
 
 const codecSelect=document.querySelector('#codecSelect');let codecMode='',codecLanguage='';
@@ -192,7 +201,7 @@ function positionServices(){
 }
 function hideServices(){servicesPanel.classList.remove('show');servicesPanel.inert=true;servicesTrigger.setAttribute('aria-expanded','false')}
 function toggleServices(){const on=!servicesPanel.classList.contains('show');positionServices();servicesPanel.classList.toggle('show',on);servicesPanel.inert=!on;servicesTrigger.setAttribute('aria-expanded',String(on))}
-document.addEventListener('click',e=>{if(!servicesTrigger.contains(e.target))hideServices()});
+document.addEventListener('click',e=>{if(!servicesTrigger.contains(e.target)&&!servicesPanel.contains(e.target))hideServices()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')hideServices()});
 window.addEventListener('resize',positionServices);new ResizeObserver(positionServices).observe(servicesTrigger);
 

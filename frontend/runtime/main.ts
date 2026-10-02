@@ -30,12 +30,8 @@ const saveLabel=element('savePath').closest('.save-row')!.previousElementSibling
 const saveBlock=document.createElement('div');saveBlock.className='save-block';saveLabel.before(saveBlock);saveBlock.append(saveLabel,element('savePath').closest('.save-row')!);
 enableLayoutMotion();
 const coverLoadingBar=document.createElement('span');coverLoadingBar.className='cover-loading-bar';coverLoadingBar.setAttribute('aria-hidden','true');document.querySelector('.cover')!.after(coverLoadingBar);
-const previewButton=document.createElement('button');previewButton.type='button';previewButton.className='fragment-play';previewButton.setAttribute('aria-label','предпросмотр фрагмента');previewButton.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg>';
-const fragmentPlayback=document.createElement('span');fragmentPlayback.className='fragment-playback';const fragmentDuration=element('duration');fragmentDuration.before(fragmentPlayback);fragmentPlayback.append(previewButton,fragmentDuration);
+const fragmentPlayback=document.createElement('span');fragmentPlayback.className='fragment-playback';const fragmentDuration=element('duration');fragmentDuration.before(fragmentPlayback);fragmentPlayback.append(fragmentDuration);
 const coverButton=document.createElement('button');coverButton.type='button';coverButton.className='small-btn media-preview-btn';coverButton.textContent='скачать обложку';document.querySelector('.media-info')!.after(coverButton);coverButton.hidden=true;
-const player=document.createElement('dialog');player.className='playback';const playerClose=document.createElement('button');playerClose.className='small-btn';playerClose.textContent='закрыть';playerClose.onclick=()=>player.close();
-const video=document.createElement('video'),audio=document.createElement('audio');video.controls=true;audio.controls=true;video.preload=audio.preload='none';video.hidden=true;audio.hidden=true;
-const playerError=document.createElement('p');playerError.className='preview-notice';player.append(video,audio,playerError,playerClose);document.body.append(player);
 const coverPreview=document.createElement('dialog');coverPreview.className='cover-preview';
 const coverPreviewImage=document.createElement('img');coverPreviewImage.alt='';
 const coverPreviewClose=document.createElement('button');coverPreviewClose.type='button';coverPreviewClose.className='close';coverPreviewClose.textContent='×';coverPreviewClose.setAttribute('aria-label','закрыть');coverPreviewClose.onclick=()=>coverPreview.close();
@@ -44,15 +40,7 @@ coverPreview.addEventListener('click',event=>{if(event.target===coverPreview)cov
 const coverControl=document.querySelector<HTMLElement>('.cover')!;coverControl.setAttribute('role','button');coverControl.tabIndex=0;coverControl.setAttribute('aria-label','показать обложку');
 function openCover(){if(!media?.thumbnail)return;coverPreviewImage.src=media.thumbnail;coverPreviewImage.alt=media.title;coverPreviewClose.setAttribute('aria-label',text('закрыть','close'));coverPreview.showModal()}
 coverControl.addEventListener('click',openCover);coverControl.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openCover()}});
-element('langBtn').addEventListener('click',()=>{previewButton.setAttribute('aria-label',text('предпросмотр фрагмента','preview fragment'));coverButton.textContent=text('скачать обложку','download cover')});
-let previewStart=0,previewEnd=Infinity;
-const clipPlayback=(track:HTMLMediaElement)=>{if(track.currentTime>=previewEnd){track.pause();track.currentTime=previewStart}};
-video.ontimeupdate=()=>clipPlayback(video);audio.ontimeupdate=()=>{if(video.dataset.separate!=='true')clipPlayback(audio)};
-video.onloadedmetadata=()=>{video.currentTime=previewStart};audio.onloadedmetadata=()=>{audio.currentTime=previewStart};
-player.addEventListener('close',()=>{video.pause();audio.pause();video.removeAttribute('src');audio.removeAttribute('src');video.load();audio.load();video.hidden=true;audio.hidden=true});
-video.onplay=()=>{if(video.dataset.separate==='true'){audio.currentTime=video.currentTime;void audio.play().catch(()=>{})}};video.onpause=()=>{if(video.dataset.separate==='true')audio.pause()};video.onseeked=()=>{if(video.dataset.separate==='true')audio.currentTime=video.currentTime};
-video.onerror=audio.onerror=()=>{playerError.textContent=text('источник не разрешил воспроизведение в браузере; скачивание остаётся доступным','the source could not be played in the browser; downloading is still available')};
-previewButton.onclick=()=>{if(!media)return;previewStart=Number(element<HTMLInputElement>('rangeStart').value);previewEnd=Number(element<HTMLInputElement>('rangeEnd').value);const sound=document.body.classList.contains('audio');video.hidden=sound;audio.hidden=!sound;playerError.textContent='';video.dataset.separate='false';if(sound){audio.src=media.audio_url||media.video_url||''}else{video.src=media.video_url||'';if(media.audio_url&&media.audio_url!==media.video_url){video.muted=true;video.dataset.separate='true';audio.src=media.audio_url}else video.muted=false}playerClose.textContent=text('закрыть','close');player.showModal();void (sound?audio:video).play().catch(()=>{})};
+element('langBtn').addEventListener('click',()=>{coverButton.textContent=text('скачать обложку','download cover')});
 
 const titlebar=document.createElement('div');titlebar.className='desktop-titlebar';
 const drag=document.createElement('div');drag.className='desktop-drag';drag.setAttribute('aria-label','переместить окно');
@@ -100,7 +88,7 @@ function placeStatus(download:boolean){
   if(download)statusDock.prepend(status);else element('linkForm').after(status);
   statusDock.classList.toggle('dock-open',download&&status.classList.contains('status-open'));statusDock.inert=!download;
 }
-const statusDismiss=document.createElement('button');statusDismiss.type='button';statusDismiss.className='status-dismiss';statusDismiss.textContent='×';statusDismiss.setAttribute('aria-label','скрыть сообщение');statusContent.append(statusDismiss);
+const statusDismiss=document.createElement('button');statusDismiss.type='button';statusDismiss.className='status-dismiss';statusDismiss.hidden=true;statusDismiss.textContent='×';statusDismiss.setAttribute('aria-label','скрыть сообщение');statusContent.append(statusDismiss);
 const errorDetails=document.createElement('details');errorDetails.className='error-details';errorDetails.hidden=true;const errorSummary=document.createElement('summary'),errorRaw=document.createElement('pre');errorSummary.textContent='подробнее';errorDetails.append(errorSummary,errorRaw);statusContent.append(errorDetails);
 const retry=document.createElement('button');retry.type='button';retry.className='small-btn';retry.hidden=true;retry.textContent='повторить';statusContent.append(retry);let lastAttempt:()=>void=()=>{void loadMedia()};retry.onclick=()=>lastAttempt();
 const statusActions=document.createElement('div');statusActions.className='status-actions';statusActions.hidden=true;statusContent.append(statusActions);
@@ -136,14 +124,14 @@ function message(value:string,error=false,reason=''){
   const docked=status.parentElement===statusDock;statusDock.classList.toggle('dock-open',docked);statusDock.inert=!docked;statusDismiss.hidden=analyzing||Boolean(job);
   if(opening||changed)requestAnimationFrame(positionWorkspace);
 }
-function hideStatus(){clearTimeout(statusTimer);for(const line of [statusText,statusReason]){lineVersions.set(line,(lineVersions.get(line)||0)+1);lineAnimations.get(line)?.cancel();}status.classList.remove('status-open');status.setAttribute('aria-hidden','true');status.inert=true;statusDock.classList.remove('dock-open');statusDock.inert=true;document.querySelector<HTMLElement>('.download-card')!.scrollTo({top:0,behavior:'smooth'});requestAnimationFrame(positionWorkspace)}
+function hideStatus(){statusDismiss.hidden=true;clearTimeout(statusTimer);for(const line of [statusText,statusReason]){lineVersions.set(line,(lineVersions.get(line)||0)+1);lineAnimations.get(line)?.cancel();}status.classList.remove('status-open');status.setAttribute('aria-hidden','true');status.inert=true;statusDock.classList.remove('dock-open');statusDock.inert=true;document.querySelector<HTMLElement>('.download-card')!.scrollTo({top:0,behavior:'smooth'});requestAnimationFrame(positionWorkspace)}
 status.addEventListener('transitionend',event=>{if(event.target===status)requestAnimationFrame(positionWorkspace)});
 statusDismiss.onclick=hideStatus;element('closeCard').addEventListener('click',hideStatus);document.querySelector('.clear-input')!.addEventListener('click',()=>{if(!job&&!analyzing)hideStatus()});
 function downloaded(id:string,path:string){message(text('скачано','downloaded'),false,path);status.classList.add('status-complete');completedActions(id)}
 function busy(value:boolean){element<HTMLButtonElement>('downloadBtn').disabled=value;cancel.hidden=!value;statusDismiss.hidden=value||analyzing;element<HTMLButtonElement>('closeCard').disabled=value;progress.hidden=!value;status.classList.toggle('is-busy',value);document.body.classList.toggle('download-working',value);element('linkForm').classList.toggle('link-working',analyzing);}
 function applyMedia(info:MediaInfo){
   media=info;
-  coverButton.hidden=!info.thumbnail;coverButton.textContent=text('скачать обложку','download cover');previewButton.setAttribute('aria-label',text('предпросмотр фрагмента','preview fragment'));
+  coverButton.hidden=!info.thumbnail;coverButton.textContent=text('скачать обложку','download cover');
   audioSource=info.formats.length>0&&info.formats.every(format=>format.vcodec==='none');
   showMedia(audioSource?'audio':'video');
   element('mediaTitle').textContent=info.title||text('без названия','untitled');
@@ -206,7 +194,7 @@ async function loadMedia(){
   const timers=searchLines.map(([label,reason],index)=>setTimeout(()=>{if(analyzing&&revision===searchRevision)message(label,false,reason)},index===0?1200:5500));searchTimers=timers;
   try{const info=await (cached?.promise||backend.analyze(url,searchId));if(revision!==searchRevision)return;mediaUrl=url;applyMedia(info);hideStatus();}
   catch(error){if(revision===searchRevision&&!String(error).includes('SEARCH_CANCELLED'))message(String(error),true)}
-  finally{timers.forEach(clearTimeout);if(revision===searchRevision){analyzing=false;searchId='';searchButton(false);statusDismiss.hidden=false;}}
+  finally{timers.forEach(clearTimeout);if(revision===searchRevision){analyzing=false;searchId='';searchButton(false);statusDismiss.hidden=!status.classList.contains('status-open')||Boolean(job);}}
 }
 const prefetched=new Map<string,{promise:Promise<MediaInfo>,id:string}>();let prefetchTimer:ReturnType<typeof setTimeout>;
 element<HTMLInputElement>('url').addEventListener('input',()=>{clearTimeout(prefetchTimer);const url=element<HTMLInputElement>('url').value.trim();if(!/^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?.*v=|youtu\.be\/)[\w-]{11}(?:[&#?].*)?$/.test(url))return;prefetchTimer=setTimeout(()=>{if(prefetched.has(url)||analyzing)return;const id=crypto.randomUUID(),promise=backend.analyze(url,id),entry={promise,id};prefetched.set(url,entry);setTimeout(()=>{if(prefetched.get(url)===entry)prefetched.delete(url)},600000);if(prefetched.size>4)prefetched.delete(prefetched.keys().next().value!);promise.catch(()=>{if(prefetched.get(url)===entry)prefetched.delete(url)})},700)});

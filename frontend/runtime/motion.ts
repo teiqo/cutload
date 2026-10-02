@@ -25,7 +25,7 @@ export function enableLayoutMotion(){
       const previous=positions.get(element);positions.set(element,next);
       if(performance.now()<settleUntil){animations.get(element)?.cancel();return null;}
       if(!previous||previous.parent!==next.parent||(previous.x===next.x&&previous.y===next.y))return null;
-      if(document.body.classList.contains('performance-mode')){animations.get(element)?.cancel();return null}
+      if(document.body.classList.contains('performance-mode')||document.body.classList.contains('viewport-resizing')){animations.get(element)?.cancel();return null}
       const active=animations.get(element),translation=active?.playState==='running'?getComputedStyle(element).translate:'0px 0px';
       const [x=0,y=0]=translation.split(' ').map(value=>parseFloat(value)||0);
       return {element,x:previous.x-next.x+x,y:previous.y-next.y+y};

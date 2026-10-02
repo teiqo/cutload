@@ -1,4 +1,4 @@
-.desktop-titlebar{position:fixed;inset:0 0 auto;height:38px;padding:0;display:flex;z-index:1100;background:color-mix(in srgb,var(--panel) 28%,transparent);backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);user-select:none}
+.desktop-titlebar{position:fixed;inset:0 0 auto;height:30px;padding:0;display:flex;z-index:1100;background:color-mix(in srgb,var(--panel) 28%,transparent);backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);user-select:none}
 .desktop-drag{flex:1;min-width:0;height:100%;touch-action:none}
 .desktop-titlebar button{flex:0 0 40px;width:40px;height:100%;padding:0;border:0;background:transparent;color:var(--dim);font-size:0;display:grid;place-items:center}
 .desktop-titlebar button:hover{background:var(--hoverbg);color:var(--txt)}
@@ -7,7 +7,7 @@
 .desktop-titlebar button::before,.desktop-titlebar button::after{display:none!important}
 .desktop-titlebar button svg{display:block;width:16px;height:16px;pointer-events:none}
 .performance-mode .desktop-titlebar{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel)}
-.desktop-app header{top:38px}.desktop-app #accPop{top:90px}
+.desktop-app header{top:44px}
 .download-status{margin-top:10px;color:var(--txt);font-size:12px;line-height:18px}
 .download-status[hidden]{display:none}
 .download-status-text{margin:0 0 7px;overflow-wrap:anywhere;white-space:pre-line}
@@ -106,7 +106,7 @@
 .filmstrip div::after{display:none!important;transition:none!important}
 .fragment-content[data-preview=pending] .timeline:not(.audio .timeline){pointer-events:none}
 #accPop{top:92px;max-height:calc(100dvh - 104px)}
-.desktop-app #accPop{top:104px;max-height:calc(100dvh - 116px)}
+.desktop-app #accPop{top:110px;max-height:calc(100dvh - 122px)}
 @media(max-width:600px){#accPop{top:80px;max-height:calc(100dvh - 92px)}}
 .hover-preview{width:176px;max-width:calc(100vw - 48px)}
 .preview-frame{height:100px;border-radius:8px}
@@ -272,3 +272,45 @@ body:not(.expanded) #loadBtn{transition:width 1.15s var(--ease),padding 1.15s va
 @media(prefers-reduced-motion:reduce){.background-flow-viewport{transition-duration:.2s}}
 
 .desktop-titlebar button:active{transform:none}
+
+/* Fixed palette colors also work with native WebView CSP restrictions. */
+#accPop .accsw[data-c="#b39df7"]{background:#b39df7}
+#accPop .accsw[data-c="#3390ec"]{background:#3390ec}
+#accPop .accsw[data-c="#4fae4e"]{background:#4fae4e}
+#accPop .accsw[data-c="#e0637c"]{background:#e0637c}
+#accPop .accsw[data-c="#e8883a"]{background:#e8883a}
+#accPop .accsw[data-c="#2bb6a8"]{background:#2bb6a8}
+
+.top-actions #settingsBtn{padding:0;line-height:0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.top-actions #settingsBtn svg{display:block;width:20px;height:20px;flex:none;margin:0;transform:none;pointer-events:none}
+#servicesDialog .service-brand[fill="#ff0033"]{fill:#ff0033;color:#ff0033}
+#servicesDialog .service-brand[fill="#e4405f"]{fill:#e4405f;color:#e4405f}
+#servicesDialog .service-brand[fill="#0077ff"]{fill:#0077ff;color:#0077ff}
+#servicesDialog .service-brand[fill="#1877f2"]{fill:#1877f2;color:#1877f2}
+#servicesDialog .service-brand[fill="#9146ff"]{fill:#9146ff;color:#9146ff}
+#servicesDialog .service-brand[fill="#ff4500"]{fill:#ff4500;color:#ff4500}
+#servicesDialog .service-brand[fill="#ff5500"]{fill:#ff5500;color:#ff5500}
+#servicesDialog .service-brand[fill="#1ab7ea"]{fill:#1ab7ea;color:#1ab7ea}
+#servicesDialog .service-brand[fill="#00a1d6"]{fill:#00a1d6;color:#00a1d6}
+#servicesDialog .service-brand[fill="#00aaff"]{fill:#00aaff;color:#00aaff}
+#servicesDialog .service-brand[fill="#ee8208"]{fill:#ee8208;color:#ee8208}
+#servicesDialog .service-brand[fill="#85c742"]{fill:#85c742;color:#85c742}
+#servicesDialog .service-brand[fill="#1da0c3"]{fill:#1da0c3;color:#1da0c3}
+#servicesDialog .service-brand[fill="#53fc18"]{fill:#53fc18;color:#53fc18}
+#servicesDialog .service-brand[fill="#1185fe"]{fill:#1185fe;color:#1185fe}
+#servicesDialog .service-brand[fill="#ff0084"]{fill:#ff0084;color:#ff0084}
+#servicesDialog .service-brand[fill="currentColor"]{fill:currentColor;color:var(--txt)}
+
+.footer-heart{width:12px;height:12px;display:block;flex:none;fill:currentColor;margin-right:3px}
+
+/* Leave room for action glows inside the history scroll viewport. */
+.recent-list{margin:0 -12px -12px;padding:0 12px 12px}
+.recent-actions .small-btn{transform:none;backface-visibility:visible}
+button,.section-label,#accPop,#servicesDialog{user-select:none;-webkit-user-select:none}
+#accPop input,#servicesDialog .service-item>span{user-select:text;-webkit-user-select:text}
+
+.viewport-resizing :is(.workspace,.star-wrap,#linkForm,#loadBtn,#qualityIndicator,.quality,.codec-picker>label){transition:none!important}
+
+#accPop .tp-th[data-t="amoled"] .dot{background:#000;border-color:#ffffff40}
+#accPop .tp-th[data-t="light"] .dot{background:linear-gradient(135deg,#fff,#9ec4e0);border-color:#60708040}
+#accPop .tp-th[data-t="accent"] .dot{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 65%,#000))}
