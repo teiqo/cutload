@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "cutload",
+  "version": "0.1.0",
+  "identifier": "com.teiqo.cutload",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://127.0.0.1:5174",
+    "frontendDist": "../web-dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "cutload",
+        "width": 900,
+        "height": 700,
+        "minWidth": 460,
+        "minHeight": 480,
+        "decorations": false,
+        "resizable": true,
+        "shadow": true,
+        "devtools": false,
+        "zoomHotkeysEnabled": false,
+        "generalAutofillEnabled": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src ipc: http://ipc.localhost; font-src 'self' data:; media-src 'self' https: http: blob:; object-src 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "useLocalToolsDir": true,
+    "icon": [
+      "icons/icon.ico"
+    ],
+    "resources": [
+      "binaries/yt-dlp.exe",
+      "binaries/ffmpeg.exe"
+    ],
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico",
+        "headerImage": "icons/installer-header.bmp",
+        "sidebarImage": "icons/installer-sidebar.bmp"
+      },
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    }
+  }
+}
