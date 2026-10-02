@@ -151,7 +151,7 @@ function applyMedia(info:MediaInfo){
   const max=Math.max(1,Math.floor(info.duration||0));
   for(const id of ['rangeStart','rangeEnd'])element<HTMLInputElement>(id).max=String(max);
   element<HTMLInputElement>('rangeStart').value='0';element<HTMLInputElement>('rangeEnd').value=String(max);
-  element<HTMLInputElement>('fragmentCheck').disabled=Boolean(info.duration&&info.duration<3);
+  element<HTMLInputElement>('fragmentCheck').disabled=!info.duration||info.duration<3;
   document.querySelectorAll<HTMLButtonElement>('.quality[data-q]').forEach(button=>{
     const q=button.dataset.q!;
     const maximum=Math.max(0,...info.formats.filter(f=>f.vcodec!=='none').map(f=>f.height||0));

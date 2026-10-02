@@ -237,15 +237,15 @@ document.fonts.ready.then(()=>{measuredLoadLabel='';scheduleInputSize();requestA
 // Clamp the selection to five seconds; visual handles butt together at that limit.
 const nativeUpdateTimes=updateTimes;
 updateTimes=function(){
-  const a=document.querySelector('#rangeStart'),b=document.querySelector('#rangeEnd'),max=+b.max;
-  a.value=Math.max(0,Math.min(+a.value,max-3));b.value=Math.max(+a.value+3,Math.min(max,+b.value));
+  const a=document.querySelector('#rangeStart'),b=document.querySelector('#rangeEnd'),max=+b.max,minSpan=Math.min(3,max);
+  a.value=Math.max(0,Math.min(+a.value,max-minSpan));b.value=Math.max(+a.value+minSpan,Math.min(max,+b.value));
   nativeUpdateTimes();
   const track=document.querySelector('#timeline'),width=track.clientWidth||400;
   let start=+a.value/max*100,end=+b.value/max*100;const gap=8/width*100;
   if(end-start<gap){const middle=(start+end)/2;start=Math.max(0,Math.min(100-gap,middle-gap/2));end=start+gap}
   const left=Math.round(start/100*width*64)/64,right=Math.max(left+8,Math.round(end/100*width*64)/64);
   track.style.setProperty('--start',left+'px');track.style.setProperty('--end',right+'px');
-  for(const [id,range,min,maxValue] of [['trimStart',a,0,+b.value-3],['trimEnd',b,+a.value+3,max]]){const h=document.getElementById(id);h.setAttribute('role','slider');h.setAttribute('aria-valuemin',min);h.setAttribute('aria-valuemax',maxValue);h.setAttribute('aria-valuenow',range.value);h.setAttribute('aria-valuetext',fmt(+range.value))}
+  for(const [id,range,min,maxValue] of [['trimStart',a,0,+b.value-minSpan],['trimEnd',b,+a.value+minSpan,max]]){const h=document.getElementById(id);h.setAttribute('role','slider');h.setAttribute('aria-valuemin',min);h.setAttribute('aria-valuemax',maxValue);h.setAttribute('aria-valuenow',range.value);h.setAttribute('aria-valuetext',fmt(+range.value))}
 };
 for(const [id,rangeId,side] of [['trimStart','rangeStart','start'],['trimEnd','rangeEnd','end']]){
   const handle=document.getElementById(id),range=document.getElementById(rangeId);let drag=null;
