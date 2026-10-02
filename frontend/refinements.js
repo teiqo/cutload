@@ -238,27 +238,27 @@ document.fonts.ready.then(()=>{measuredLoadLabel='';scheduleInputSize();requestA
 const nativeUpdateTimes=updateTimes;
 updateTimes=function(){
   const a=document.querySelector('#rangeStart'),b=document.querySelector('#rangeEnd'),max=+b.max;
-  a.value=Math.max(0,Math.min(+a.value,max-5));b.value=Math.max(+a.value+5,Math.min(max,+b.value));
+  a.value=Math.max(0,Math.min(+a.value,max-3));b.value=Math.max(+a.value+3,Math.min(max,+b.value));
   nativeUpdateTimes();
   const track=document.querySelector('#timeline'),width=track.clientWidth||400;
   let start=+a.value/max*100,end=+b.value/max*100;const gap=8/width*100;
   if(end-start<gap){const middle=(start+end)/2;start=Math.max(0,Math.min(100-gap,middle-gap/2));end=start+gap}
   const left=Math.round(start/100*width*64)/64,right=Math.max(left+8,Math.round(end/100*width*64)/64);
   track.style.setProperty('--start',left+'px');track.style.setProperty('--end',right+'px');
-  for(const [id,range,min,maxValue] of [['trimStart',a,0,+b.value-5],['trimEnd',b,+a.value+5,max]]){const h=document.getElementById(id);h.setAttribute('role','slider');h.setAttribute('aria-valuemin',min);h.setAttribute('aria-valuemax',maxValue);h.setAttribute('aria-valuenow',range.value);h.setAttribute('aria-valuetext',fmt(+range.value))}
+  for(const [id,range,min,maxValue] of [['trimStart',a,0,+b.value-3],['trimEnd',b,+a.value+3,max]]){const h=document.getElementById(id);h.setAttribute('role','slider');h.setAttribute('aria-valuemin',min);h.setAttribute('aria-valuemax',maxValue);h.setAttribute('aria-valuenow',range.value);h.setAttribute('aria-valuetext',fmt(+range.value))}
 };
 for(const [id,rangeId,side] of [['trimStart','rangeStart','start'],['trimEnd','rangeEnd','end']]){
   const handle=document.getElementById(id),range=document.getElementById(rangeId);let drag=null;
   handle.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();drag={x:e.clientX,value:+range.value};handle.setPointerCapture(e.pointerId)});
-  handle.addEventListener('pointermove',e=>{if(!drag)return;const width=document.getElementById('timeline').clientWidth,max=+document.getElementById('rangeEnd').max,v=Math.round(drag.value+(e.clientX-drag.x)/width*max);range.value=side==='start'?Math.max(0,Math.min(v,+document.getElementById('rangeEnd').value-5)):Math.min(max,Math.max(v,+document.getElementById('rangeStart').value+5));updateTimes()});
+  handle.addEventListener('pointermove',e=>{if(!drag)return;const width=document.getElementById('timeline').clientWidth,max=+document.getElementById('rangeEnd').max,v=Math.round(drag.value+(e.clientX-drag.x)/width*max);range.value=side==='start'?Math.max(0,Math.min(v,+document.getElementById('rangeEnd').value-3)):Math.min(max,Math.max(v,+document.getElementById('rangeStart').value+3));updateTimes()});
   const release=()=>{drag=null};handle.addEventListener('pointerup',release);handle.addEventListener('pointercancel',release);
-  handle.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const max=+document.getElementById('rangeEnd').max;let v=e.key==='Home'?0:e.key==='End'?max:+range.value+(e.key==='ArrowLeft'?-1:1)*(e.shiftKey?5:1);range.value=side==='start'?Math.max(0,Math.min(v,+document.getElementById('rangeEnd').value-5)):Math.min(max,Math.max(v,+document.getElementById('rangeStart').value+5));updateTimes()});
+  handle.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const max=+document.getElementById('rangeEnd').max;let v=e.key==='Home'?0:e.key==='End'?max:+range.value+(e.key==='ArrowLeft'?-1:1)*(e.shiftKey?5:1);range.value=side==='start'?Math.max(0,Math.min(v,+document.getElementById('rangeEnd').value-3)):Math.min(max,Math.max(v,+document.getElementById('rangeStart').value+3));updateTimes()});
 }
 new ResizeObserver(updateTimes).observe(document.getElementById('timeline'));
 updateTimes();
 
 for(const [id,side] of [['startTime','start'],['endTime','end']]){
   const field=document.getElementById(id);
-  const commit=()=>{const parts=field.value.trim().split(':');if(parts.length===2&&parts.every(p=>/^\d+$/.test(p))){const v=Number(parts[0])*60+Number(parts[1]),a=document.getElementById('rangeStart'),b=document.getElementById('rangeEnd');if(side==='start')a.value=Math.max(0,Math.min(v,+b.value-5));else b.value=Math.min(+b.max,Math.max(v,+a.value+5))}updateTimes()};
+  const commit=()=>{const parts=field.value.trim().split(':');if(parts.length===2&&parts.every(p=>/^\d+$/.test(p))){const v=Number(parts[0])*60+Number(parts[1]),a=document.getElementById('rangeStart'),b=document.getElementById('rangeEnd');if(side==='start')a.value=Math.max(0,Math.min(v,+b.value-3));else b.value=Math.min(+b.max,Math.max(v,+a.value+3))}updateTimes()};
   field.addEventListener('blur',commit);field.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit();field.blur()}});
 }

@@ -1,3 +1,4 @@
+import {setupBackgroundFlow} from './background-flow';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import {setupSettings} from './settings';
 import { backend, desktop, backendEnabled } from './bridge';
@@ -147,10 +148,10 @@ function applyMedia(info:MediaInfo){
   element('mediaTitle').textContent=info.title||text('без названия','untitled');
   element('mediaMeta').textContent=[info.uploader||info.channel,info.duration?duration(info.duration):null].filter(Boolean).join(' · ');
   videoPreview?.reset();
-  const max=Math.max(5,Math.floor(info.duration||0));
+  const max=Math.max(1,Math.floor(info.duration||0));
   for(const id of ['rangeStart','rangeEnd'])element<HTMLInputElement>(id).max=String(max);
   element<HTMLInputElement>('rangeStart').value='0';element<HTMLInputElement>('rangeEnd').value=String(max);
-  element<HTMLInputElement>('fragmentCheck').disabled=Boolean(info.duration&&info.duration<5);
+  element<HTMLInputElement>('fragmentCheck').disabled=Boolean(info.duration&&info.duration<3);
   document.querySelectorAll<HTMLButtonElement>('.quality[data-q]').forEach(button=>{
     const q=button.dataset.q!;
     const maximum=Math.max(0,...info.formats.filter(f=>f.vcodec!=='none').map(f=>f.height||0));
@@ -213,7 +214,7 @@ let projectDownload:()=>void=()=>{};
 const videoPreview=backendEnabled?createPreview(()=>({url:mediaUrl,audio:document.body.classList.contains('audio'),storyboard:media?.storyboard,duration:media?.duration,thumbnail:media?.thumbnail}),seconds=>{
   if(!media)return;media.duration=seconds;const max=Math.floor(seconds);
   for(const id of ['rangeStart','rangeEnd'])element<HTMLInputElement>(id).max=String(max);
-  element<HTMLInputElement>('rangeEnd').value=String(max);element<HTMLInputElement>('fragmentCheck').disabled=max<5;
+  element<HTMLInputElement>('rangeEnd').value=String(max);element<HTMLInputElement>('fragmentCheck').disabled=max<3;
   updateTimes();requestAnimationFrame(positionWorkspace);
 },()=>projectDownload()):null;
 if(backendEnabled){
@@ -253,3 +254,4 @@ if(backendEnabled){
   document.querySelector<HTMLElement>('.demo-caption')!.textContent='предпросмотр интерфейса · скачивание доступно в приложении';
 }
 setupSettings();
+setupBackgroundFlow();
