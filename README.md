@@ -1,6 +1,14 @@
+<p align="center">
+  <img src="src-tauri/icons/icon.png" width="96" alt="логотип cutload">
+</p>
+
 # cutload
 
-Приложение для Windows, которое скачивает видео и аудио по ссылке прямо на компьютер. Интерфейс на TypeScript и WebGL, оболочка Tauri 2, локальный загрузчик на Rust с yt-dlp и FFmpeg.
+приложение для Windows, которое скачивает видео и аудио по ссылке прямо на компьютер. Интерфейс на TypeScript и WebGL, оболочка Tauri 2, локальный загрузчик на Rust с yt-dlp и FFmpeg.
+
+<p align="center">
+  <img src="docs/images/cutload.png" width="720" alt="интерфейс приложения cutload">
+</p>
 
 ## Возможности
 
