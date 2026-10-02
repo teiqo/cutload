@@ -1,6 +1,6 @@
 [package]
 name = "cutload"
-version = "1.0.3"
+version = "1.0.4"
 description = "Local video and audio downloader"
 edition = "2021"
 

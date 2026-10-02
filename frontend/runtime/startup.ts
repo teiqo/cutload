@@ -4,7 +4,8 @@ import {desktop} from './bridge';
 export async function finishStartup(){
   const splash=document.querySelector<HTMLElement>('#startupSplash');
   if(!splash)return;
-  if(desktop)await getCurrentWindow().show();
+  // Showing the native window must not block removal of the startup overlay.
+  if(desktop)void getCurrentWindow().show().catch(error=>console.error('Could not show window',error));
   const frame=()=>new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));
   const ready=async()=>{
     await document.fonts.ready;

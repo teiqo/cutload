@@ -7,4 +7,12 @@
   if(luma<.12){const base=theme==='light'?[64,68,75]:[184,190,200];color='#'+channels.map((c,i)=>Math.round(c*.2+base[i]*.8).toString(16).padStart(2,'0')).join('');}
   else if(theme==='light'&&luma>.85){const base=[101,112,128];color='#'+channels.map((c,i)=>Math.round(c*.48+base[i]*.52).toString(16).padStart(2,'0')).join('');}
   document.documentElement.style.setProperty('--startup-accent',color);
+  // Independent of module initialization, IPC, fonts and WebGL readiness.
+  // The normal startup path removes this earlier after the first stable frame.
+  setTimeout(()=>{
+    const splash=document.getElementById('startupSplash');
+    if(!splash)return;
+    splash.classList.add('startup-finished');
+    setTimeout(()=>splash.remove(),400);
+  },2800);
 })();

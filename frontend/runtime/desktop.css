@@ -1,6 +1,6 @@
-.desktop-titlebar{position:fixed;inset:0 0 auto;height:38px;padding:6px 8px 2px 0;display:flex;z-index:1100;background:color-mix(in srgb,var(--panel) 28%,transparent);backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);user-select:none}
+.desktop-titlebar{position:fixed;inset:0 0 auto;height:38px;padding:0;display:flex;z-index:1100;background:color-mix(in srgb,var(--panel) 28%,transparent);backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);user-select:none}
 .desktop-drag{flex:1;min-width:0;height:100%;touch-action:none}
-.desktop-titlebar button{flex:0 0 40px;width:40px;height:30px;padding:0;border:0;background:transparent;color:var(--dim);font-size:0;display:grid;place-items:center}
+.desktop-titlebar button{flex:0 0 40px;width:40px;height:100%;padding:0;border:0;background:transparent;color:var(--dim);font-size:0;display:grid;place-items:center}
 .desktop-titlebar button:hover{background:var(--hoverbg);color:var(--txt)}
 .desktop-titlebar .window-close:hover{background:#d83b49;color:white}
 .desktop-titlebar .window-maximize{font-size:0}
@@ -270,3 +270,5 @@ body:not(.expanded) #loadBtn{transition:width 1.15s var(--ease),padding 1.15s va
 
 .background-flow-viewport.flow-visible{opacity:1}
 @media(prefers-reduced-motion:reduce){.background-flow-viewport{transition-duration:.2s}}
+
+.desktop-titlebar button:active{transform:none}
