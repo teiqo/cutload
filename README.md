@@ -6,6 +6,9 @@
 
 приложение для Windows, которое скачивает видео и аудио по ссылке прямо на компьютер. интерфейс на TypeScript и WebGL, оболочка Tauri 2, локальный загрузчик на Rust с yt-dlp и FFmpeg.
 
+<p align="center">
+  <img src="docs/images/cutload.png" width="960" alt="интерфейс приложения cutload">
+</p>
 
 ## возможности
 
@@ -59,3 +62,12 @@ npm run desktop
 `npm run build`, `cargo test --manifest-path src-tauri/Cargo.toml`, затем реальный сценарий анализа, скачивания короткого видео и отмены.
 
 при первом скачивании интерфейс запрашивает папку и запоминает выбор. последние 50 успешных загрузок хранятся в `downloads.json` в каталоге данных приложения. кнопки истории открывают файл в системном плеере или выделяют его в проводнике; удалённые и перемещённые файлы показывают понятную ошибку.
+
+## проект на github
+
+[![звёзды](https://img.shields.io/github/stars/teiqo/cutload?style=flat-square&label=%D0%B7%D0%B2%D1%91%D0%B7%D0%B4%D1%8B&labelColor=1b2320&color=5d755e)](https://github.com/teiqo/cutload/stargazers)
+[![открытые задачи](https://img.shields.io/github/issues/teiqo/cutload?style=flat-square&label=%D0%BE%D1%82%D0%BA%D1%80%D1%8B%D1%82%D1%8B%D0%B5%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8&labelColor=1b2320&color=5d755e)](https://github.com/teiqo/cutload/issues)
+[![обновлено](https://img.shields.io/github/last-commit/teiqo/cutload?style=flat-square&label=%D0%BE%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BE&labelColor=1b2320&color=5d755e)](https://github.com/teiqo/cutload/commits/main)
+[![размер репозитория](https://img.shields.io/github/repo-size/teiqo/cutload?style=flat-square&label=%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%80%20%D1%80%D0%B5%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F&labelColor=1b2320&color=5d755e)](https://github.com/teiqo/cutload/tree/main)
+
+[сообщить об ошибке](https://github.com/teiqo/cutload/issues/new) · [исходники](https://github.com/teiqo/cutload/tree/main) · [история изменений](https://github.com/teiqo/cutload/commits/main)
