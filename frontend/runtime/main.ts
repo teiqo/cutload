@@ -38,7 +38,7 @@ const coverPreviewClose=document.createElement('button');coverPreviewClose.type=
 coverPreview.append(coverPreviewImage,coverPreviewClose);document.body.append(coverPreview);
 coverPreview.addEventListener('click',event=>{if(event.target===coverPreview)coverPreview.close()});
 const coverControl=document.querySelector<HTMLElement>('.cover')!;coverControl.setAttribute('role','button');coverControl.tabIndex=0;coverControl.setAttribute('aria-label','показать обложку');
-function openCover(){if(!media?.thumbnail)return;coverPreviewImage.src=media.thumbnail;coverPreviewImage.alt=media.title;coverPreviewClose.setAttribute('aria-label',text('закрыть','close'));coverPreview.showModal()}
+function openCover(){if(!media?.thumbnail)return;coverPreviewImage.src=media.thumbnail_full||media.thumbnail;coverPreviewImage.alt=media.title;coverPreviewClose.setAttribute('aria-label',text('закрыть','close'));coverPreview.showModal()}
 coverControl.addEventListener('click',openCover);coverControl.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openCover()}});
 element('langBtn').addEventListener('click',()=>{coverButton.textContent=text('скачать обложку','download cover')});
 
@@ -216,7 +216,7 @@ if(backendEnabled){
   }
   element<HTMLFormElement>('linkForm').onsubmit=event=>{event.preventDefault();if(analyzing)cancelSearch();else void loadMedia()};
   element('chooseFolder').onclick=()=>{void pickFolder().catch(error=>message(String(error),true))};
-  coverButton.onclick=async()=>{if(!media?.thumbnail||job)return;lastAttempt=()=>coverButton.click();try{if(!folder&&!await pickFolder())return;placeStatus(true);coverButton.disabled=true;statusActions.hidden=true;message(text('скачиваю обложку','downloading cover'));const saved=await backend.cover(media.thumbnail,media.title,folder);downloaded(saved.id,saved.path);void history.refresh()}catch(error){message(String(error),true)}finally{coverButton.disabled=false}};
+  coverButton.onclick=async()=>{if(!media?.thumbnail||job)return;lastAttempt=()=>coverButton.click();try{if(!folder&&!await pickFolder())return;placeStatus(true);coverButton.disabled=true;statusActions.hidden=true;message(text('скачиваю обложку','downloading cover'));const saved=await backend.cover(media.thumbnail_full||media.thumbnail,media.title,folder);downloaded(saved.id,saved.path);void history.refresh()}catch(error){message(String(error),true)}finally{coverButton.disabled=false}};
   async function startDownload(destination?:string){
     if(!media||job||pickingFolder)return;
     lastAttempt=()=>{void startDownload(destination)};

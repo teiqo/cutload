@@ -10,6 +10,11 @@
   <img src="docs/images/cutload.png" width="960" alt="интерфейс приложения cutload">
 </p>
 
+<p align="center">
+  <a href="https://github.com/teiqo/cutload/releases/latest"><strong>скачать последнюю версию для Windows</strong></a><br>
+  <a href="https://github.com/teiqo/cutload/releases/latest"><img src="https://img.shields.io/github/v/release/teiqo/cutload?label=%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F" alt="последняя версия"></a>
+</p>
+
 ## возможности
 
 - выбор качества, формата и кодека, извлечение аудио и обрезка фрагмента.
