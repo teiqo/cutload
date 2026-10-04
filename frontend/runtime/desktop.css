@@ -314,3 +314,6 @@ button,.section-label,#accPop,#servicesDialog{user-select:none;-webkit-user-sele
 #accPop .tp-th[data-t="amoled"] .dot{background:#000;border-color:#ffffff40}
 #accPop .tp-th[data-t="light"] .dot{background:linear-gradient(135deg,#fff,#9ec4e0);border-color:#60708040}
 #accPop .tp-th[data-t="accent"] .dot{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 65%,#000))}
+
+.settings-language #langBtn{white-space:nowrap;flex-shrink:0}
+.settings-language #langBtn::before,.settings-language #langBtn::after{display:none!important}
