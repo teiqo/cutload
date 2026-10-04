@@ -1,3 +1,4 @@
+import {setupTextMenu} from './context-menu';
 import {setupBackgroundFlow} from './background-flow';
 import {finishStartup} from './startup';
 import { getCurrentWindow } from '@tauri-apps/api/window';
@@ -54,10 +55,7 @@ drag.onmousedown=event=>{if(desktop&&event.button===0&&event.detail!==2){event.p
 drag.ondblclick=()=>{if(desktop)void getCurrentWindow().toggleMaximize()};
 if(desktop){
   document.body.prepend(titlebar);document.body.classList.add('desktop-app');
-  document.addEventListener('contextmenu',event=>{
-    if(event.target===element<HTMLInputElement>('url'))return;
-    event.preventDefault();
-  });
+  document.addEventListener('contextmenu',event=>event.preventDefault());
   document.addEventListener('keydown',event=>{if(event.key==='F7'||event.key==='F12'||((event.ctrlKey||event.metaKey)&&['p','s','r','+','-','=','0'].includes(event.key.toLowerCase()))||(event.ctrlKey&&event.shiftKey&&['i','j','c'].includes(event.key.toLowerCase())))event.preventDefault()});
 }
 
@@ -246,5 +244,6 @@ if(backendEnabled){
   document.querySelector<HTMLElement>('.demo-caption')!.textContent='предпросмотр интерфейса · скачивание доступно в приложении';
 }
 setupSettings();
+setupTextMenu();
 setupBackgroundFlow();
 void finishStartup();

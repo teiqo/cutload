@@ -36,7 +36,7 @@ fn main(){
                 window.with_webview(|webview|unsafe {
                     if let Ok(core)=webview.controller().CoreWebView2() {
                         if let Ok(settings)=core.Settings() {
-                            let _=settings.SetAreDefaultContextMenusEnabled(true);
+                            let _=settings.SetAreDefaultContextMenusEnabled(false);
                             let _=settings.SetIsStatusBarEnabled(false);
                             let _=settings.SetIsZoomControlEnabled(false);
                             let _=settings.SetAreDevToolsEnabled(false);
